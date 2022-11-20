@@ -192,6 +192,7 @@ class _UtilidadesState extends State<Utilidades> {
             icon: const Icon(Icons.arrow_back),
             onPressed: (){
               Navigator.pop (context, false);
+              print("GIT");
             },
           ),
 
