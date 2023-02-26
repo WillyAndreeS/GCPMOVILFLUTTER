@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:acpmovil/constants.dart';
 
 import 'package:acpmovil/views/nuestroequipo.dart';
+import 'package:acpmovil/views/organigrama.dart';
 import 'package:acpmovil/views/page2.dart';
 import 'package:acpmovil/views/principalpage.dart';
 import 'package:acpmovil/views/screen_contactanos.dart';
@@ -32,6 +33,8 @@ class Conocenos extends StatefulWidget {
 class _ConocenosState extends State<Conocenos> {
   late Size size;
   List conocenosF = [];
+  List menus_ocultos = [];
+  String? estado_menu1;
   bool hasInternet = false;
   late StreamSubscription internetSubscription;
   late StreamSubscription subscription;
@@ -58,7 +61,10 @@ setState((){
   void initState() {
     super.initState();
     Connectivity().onConnectivityChanged.listen((result) {
-      setState(() => this.result = result);
+      if(mounted){
+        setState(() => this.result = result);
+      }
+
     });
     InternetConnectionChecker().onStatusChange.listen((status) {
       final hasInternet = status == InternetConnectionStatus.connected;
@@ -66,8 +72,30 @@ setState((){
     });
     print("ESTADO INTERNET "+hasInternets.toString());
     getConocenossacp();
+    getMenusO();
 
   }
+
+  Future<void> getMenusO() async{
+    menus_ocultos.clear();
+    var menus = FirebaseFirestore.instance.collection("menus_ocultos").where("menu", isEqualTo: "nuestro_equipo");
+    QuerySnapshot menu = await menus.get();
+    setState((){
+      if(menu.docs.isNotEmpty){
+        for(var doc in menu.docs){
+          print("DATOS: "+doc.id.toString());
+          menus_ocultos.add(doc.data());
+        }
+
+        print("GERENTE: "+menus_ocultos[0]["estado"]);
+        estado_menu1 = menus_ocultos[0]["estado"];
+
+      }
+    });
+
+
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +120,7 @@ setState((){
     itemCount: conocenosF.length,
     itemBuilder: (BuildContext context, int index) {
       return conocenosF.isNotEmpty ? GestureDetector(
-          onTap: (){
+          onTap: ()async{
             if(conocenosF[index]["id"] == 1){
               setState((){
                 Navigator.push(
@@ -101,10 +129,19 @@ setState((){
 
               });
             }else if(conocenosF[index]["id"] == 2){
-              setState((){
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) =>  NuestroEquipoPage()));
+              await getMenusO();
+              setState(()  {
+
+                if(estado_menu1 == "0" || tipoUsuario == "invitado"){
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) =>  OrgranigramaPage()));
+                }else{
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) =>  NuestroEquipoPage()));
+                }
+
 
               });
 

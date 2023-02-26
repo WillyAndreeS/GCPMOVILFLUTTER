@@ -538,7 +538,7 @@ class NuestroEquipoPageState extends State<NuestroEquipoPage> {
                               setState((){
                                 Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (context) =>  DirectorioPage(trabajadores: dataUser,)));
+                                    MaterialPageRoute(builder: (context) =>  DirectorioPage(trabajadores: dataUser,areacol: areas[index]["nombre"],)));
 
                               });
 

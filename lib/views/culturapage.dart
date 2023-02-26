@@ -198,7 +198,7 @@ class CulturaPageState extends State<CulturaPage> {
           // padding: const EdgeInsets.only(top: 40),
           decoration: const BoxDecoration(
             image: DecorationImage(
-              image: AssetImage("assets/images/img_mvv_vision.jpg",),
+              image: AssetImage("assets/images/background_mvv_valores.jpg",),
               fit: BoxFit.cover,
             ),
           ),

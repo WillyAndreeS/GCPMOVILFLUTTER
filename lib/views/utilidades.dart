@@ -31,6 +31,8 @@ class Utilidades extends StatefulWidget {
 class _UtilidadesState extends State<Utilidades> {
 
   late Size size;
+  List menus_ocultos = [];
+  String? estado_menu1;
   List comunicados = [];
   final myControllerUser = TextEditingController();
   late FocusNode focusUser;
@@ -110,6 +112,26 @@ class _UtilidadesState extends State<Utilidades> {
     }
   }
 
+  Future<void> getMenusO() async{
+    menus_ocultos.clear();
+    var menus = FirebaseFirestore.instance.collection("menus_ocultos").where("menu", isEqualTo: "utilidades");
+    QuerySnapshot menu = await menus.get();
+    setState((){
+      if(menu.docs.isNotEmpty){
+        for(var doc in menu.docs){
+          print("DATOS: "+doc.id.toString());
+          menus_ocultos.add(doc.data());
+        }
+
+        print("GERENTE: "+menus_ocultos[0]["estado"]);
+        estado_menu1 = menus_ocultos[0]["estado"];
+
+      }
+    });
+
+
+  }
+
   Future<String?> RecibirDatos() async {
     comunicados.clear();
     showDialog(
@@ -124,57 +146,69 @@ class _UtilidadesState extends State<Utilidades> {
     int anioactual = now.year;
     final result = await InternetAddress.lookup('google.com');
     if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-      var response = await http.post(
-          Uri.parse("${url_base}acpmovil/controlador/datos-controlador.php"),
-          body: {"accion": "consultar_uti_id_anio", "IDCODIGOGENERAL": dniUsuario, "ANIO": anioactual.toString()});
-      // if (mounted) {
-      setState(() {
-        var extraerData = json.decode(response.body);
-        comunicados = extraerData["resultado"];
-        print("REST: "+comunicados.toString());
-        if(comunicados[0]["RESPUESTA"].toString().toUpperCase() == "TRUE"){
-          if(comunicados[0]["EMPRESA"].toString().toUpperCase() == "ACP"){
-            if(comunicados[0]["MOSTRAR_ENCUESTA"].toString().toUpperCase() == "SI"){
-              if(comunicados[0]["ESPONDIO_ENCUESTA"].toString().toUpperCase() == "NO"){
-                Navigator.pop(context);
-                //MostrarMensaje();
+      if(estado_menu1 == "1"){
+        var response = await http.post(
+            Uri.parse("${url_base}acpmovil/controlador/datos-controlador.php"),
+            body: {"accion": "consultar_uti_id_anio", "IDCODIGOGENERAL": dniUsuario, "ANIO": anioactual.toString()});
+        // if (mounted) {
+        setState(() {
+          var extraerData = json.decode(response.body);
+          comunicados = extraerData["resultado"];
+          print("REST: "+comunicados.toString());
+          if(comunicados[0]["RESPUESTA"].toString().toUpperCase() == "TRUE"){
+            if(comunicados[0]["EMPRESA"].toString().toUpperCase() == "ACP"){
+              if(comunicados[0]["MOSTRAR_ENCUESTA"].toString().toUpperCase() == "SI"){
+                if(comunicados[0]["ESPONDIO_ENCUESTA"].toString().toUpperCase() == "NO"){
+                  Navigator.pop(context);
+                  //MostrarMensaje();
+                }else{
+                  Navigator.pop(context);
+                  MostrarMensaje();
+                }
               }else{
                 Navigator.pop(context);
                 MostrarMensaje();
               }
+
             }else{
               Navigator.pop(context);
               MostrarMensaje();
             }
+          }else if(comunicados[0]["RESPUESTA"].toString().toUpperCase() == "FALSE"){
+            Navigator.pop(context);
+            if(comunicados[0]["ID_SOLICITUD_EXISTENTE"].toString().trim().length != 0){
+              showDialog(
+                  context: context,
+                  builder: (context) =>  CustomDialogsAlert(
+                    title: "1/3 Consultar",
+                    description: comunicados[0]["MENSAJE"].toString().replaceAll("<b>", "").replaceAll("</b>", ""),
+                    imagen: "assets/images/advertencia.png",
+                    utilidades: comunicados,
+                  ));
+            }else{
+              Navigator.pop(context);
+              showDialog(
+                  context: context,
+                  builder: (context) =>  CustomDialogsAlertError(
+                    title: "Lo sentimos...",
+                    description:comunicados[0]["MENSAJE"].toString().replaceAll("<b>", "").replaceAll("</b>", ""),
+                    imagen: "assets/images/advertencia.png",
+                    utilidades: comunicados,
+                  ));
+            }
+          }
+        });
+      }else{
+        showDialog(
+            context: context,
+            builder: (context) =>  CustomDialogsAlertError(
+              title: "Lo sentimos...",
+              description:"Las utilidades 2023 aún no se encuentran disponibles",
+              imagen: "assets/images/advertencia.png",
+              utilidades: comunicados,
+            ));
+      }
 
-          }else{
-            Navigator.pop(context);
-            MostrarMensaje();
-          }
-        }else if(comunicados[0]["RESPUESTA"].toString().toUpperCase() == "FALSE"){
-          Navigator.pop(context);
-          if(comunicados[0]["ID_SOLICITUD_EXISTENTE"].toString().trim().length != 0){
-            showDialog(
-                context: context,
-                builder: (context) =>  CustomDialogsAlert(
-                  title: "1/3 Consultar",
-                  description: comunicados[0]["MENSAJE"].toString().replaceAll("<b>", "").replaceAll("</b>", ""),
-                  imagen: "assets/images/advertencia.png",
-                  utilidades: comunicados,
-                ));
-          }else{
-            Navigator.pop(context);
-            showDialog(
-                context: context,
-                builder: (context) =>  CustomDialogsAlertError(
-                  title: "Lo sentimos...",
-                  description:comunicados[0]["MENSAJE"].toString().replaceAll("<b>", "").replaceAll("</b>", ""),
-                  imagen: "assets/images/advertencia.png",
-                  utilidades: comunicados,
-                ));
-          }
-        }
-      });
 
     }
   }
@@ -265,7 +299,8 @@ class _UtilidadesState extends State<Utilidades> {
                 BorderRadius.circular(30)),
             elevation: 10,
             primary: const Color(0XFF00AB74)),
-        onPressed: () {
+        onPressed: () async{
+          await getMenusO();
           RecibirDatos();
         },
         child: const Text('CONSULTAR'),

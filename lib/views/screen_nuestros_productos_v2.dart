@@ -1,6 +1,9 @@
 import 'dart:async';
 
+import 'package:acpmovil/constants.dart';
 import 'package:acpmovil/models/producto.dart';
+import 'package:acpmovil/views/Nuestros_productos_web.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,6 +23,8 @@ class _NuestrosProductosV2State extends State<NuestrosProductosV2> {
       PageController(viewportFraction: 0.35, initialPage: _initialPage.toInt());
   final _pageTextController = PageController(initialPage: _initialPage.toInt());
   List<Producto> productos = [];
+  List menus_ocultos = [];
+  String? estado_menu1;
 
   double _currentPage = _initialPage;
   double _textPage = _initialPage;
@@ -52,6 +57,26 @@ class _NuestrosProductosV2State extends State<NuestrosProductosV2> {
     _textPage = _currentPage;
   }
 
+  Future<void> getMenusO() async{
+    menus_ocultos.clear();
+    var menus = FirebaseFirestore.instance.collection("menus_ocultos").where("menu", isEqualTo: "nuestros_productos");
+    QuerySnapshot menu = await menus.get();
+    setState((){
+      if(menu.docs.isNotEmpty){
+        for(var doc in menu.docs){
+          print("DATOS: "+doc.id.toString());
+          menus_ocultos.add(doc.data());
+        }
+
+        print("GERENTE: "+menus_ocultos[0]["estado"]);
+        estado_menu1 = menus_ocultos[0]["estado"];
+
+      }
+    });
+
+
+  }
+
   @override
   void initState() {
     _currentPage = _initialPage;
@@ -60,6 +85,7 @@ class _NuestrosProductosV2State extends State<NuestrosProductosV2> {
     _pageProductController.addListener(_productScrollListener);
     _pageTextController.addListener(_textControllerListener);
     super.initState();
+    getMenusO();
     /*SharedPreferences.getInstance().then((prefs) {
       _prefs = prefs;
       isdialogShown = prefs.getBool('dialog_open') ?? false;
@@ -118,7 +144,7 @@ class _NuestrosProductosV2State extends State<NuestrosProductosV2> {
               ]),
             )),
         Transform.scale(
-          scale: 2.2, //1.6
+          scale: 2.5, //1.6
           alignment: Alignment.bottomCenter,
           child: PageView.builder(
               controller: _pageProductController,
@@ -157,10 +183,15 @@ class _NuestrosProductosV2State extends State<NuestrosProductosV2> {
                       ..scale(value),
                     child: Opacity(
                       opacity: opacity,
-                      child: Column(children: [ Hero(
+                      child: Column(children: [
+                       /* Align(alignment: Alignment.topCenter, child: index<4 ? IconButton(onPressed: (){Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) =>  NuestroProductosWeb(titulo: index == 1 ? "Palta": index == 2 ? "Esparrago": "Arandano",url: index == 1 ? "https://web.acpagro.com/acpmovil/vista/para_productos/producto_palta.php": index == 2 ? "https://web.acpagro.com/acpmovil/vista/para_productos/producto_esparrago.php":"https://web.acpagro.com/acpmovil/vista/para_productos/producto_arandano.php",)));}, icon: Icon(Icons.text_snippet_rounded), color: kPrimaryColor,): Container()),*/
+                        SizedBox(height: 30,),
+                        Hero(
                           tag: Text(product.nombre, style: TextStyle(fontFamily: "Schyler")),
                           child: Image.asset(product.imagen,
-                              fit: BoxFit.fitHeight, width: 120, //fitHeight
+                              fit: BoxFit.fitHeight, width: 110, //fitHeight
                               )),
                         Align(alignment: Alignment.bottomCenter, child: index<3 ? Image.asset("assets/images/swipeup.gif", width: 50,): Container()),
                       ],)
@@ -172,9 +203,9 @@ class _NuestrosProductosV2State extends State<NuestrosProductosV2> {
 
         Positioned(
             left: 20,
-            top: 20,
+            top: 30,
             right: 20,
-            height: 100,
+            height: size.height/5.5,
             child: Column(
               children: [
                 Expanded(
@@ -196,14 +227,14 @@ class _NuestrosProductosV2State extends State<NuestrosProductosV2> {
                                 maxLines: 1,
                                 textAlign: TextAlign.left,
                                 style: const TextStyle(
-                                  fontSize: 30,
+                                  fontSize: 28,
                                   fontWeight: FontWeight.w700,fontFamily: "Schyler"
                                 ),
                               ),
                             ),
                           );
                         })),
-                const SizedBox(height: 0),
+                Expanded( child:
                 AnimatedSwitcher(
                   duration: _duration,
                   child: Text(
@@ -212,14 +243,37 @@ class _NuestrosProductosV2State extends State<NuestrosProductosV2> {
                     textoDescripcion(_currentPage.toInt()),
                     textAlign: TextAlign.justify,
                     style: const TextStyle(
-                      fontSize: 18,
+                      fontSize: 16,
                       fontWeight: FontWeight.w500,
                         fontFamily: "Schyler"
                     ),
                     //key: Key(productos[_currentPage.toInt()].nombre),
                     key: Key(keyName(_currentPage.toInt())),
                   ),
-                )
+                ),),
+                SizedBox(height: 5,),
+                estado_menu1 == '1' ?
+                AnimatedSwitcher(
+                  duration: _duration,
+                  child: Container(width: size.width/3, child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        fixedSize: Size(
+                            MediaQuery.of(context).size.width /
+                                1.3,
+                            20),
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                            BorderRadius.circular(20)),
+                        elevation: 10,
+                        primary: const Color(0XFF00AB74)),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) =>  NuestroProductosWeb(titulo: _currentPage.toInt() == 0 ? "Palta": _currentPage.toInt() == 1 ? "Espárrago": "Arándano",url: _currentPage.toInt() == 0 ? "https://web.acpagro.com/acpmovil/vista/para_productos/producto_palta.php": _currentPage.toInt() == 1 ? "https://web.acpagro.com/acpmovil/vista/para_productos/producto_esparrago.php":"https://web.acpagro.com/acpmovil/vista/para_productos/producto_arandano.php",)));
+                    },
+                    child: const Text('Ver mas...'),
+                  ),),
+                ): Container()
               ],
             )),
 

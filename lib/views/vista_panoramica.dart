@@ -97,7 +97,7 @@ setState((){
 
         margin: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
         decoration: BoxDecoration(borderRadius: const BorderRadius.all(Radius.circular(10.0)), image: DecorationImage(
-          image: AssetImage("assets/images/certificaciones_campo_planta.jpg"),
+          image: const AssetImage("assets/images/certificaciones_campo_planta.jpg"),
           fit: BoxFit.cover,
         ), boxShadow: [
           BoxShadow(color: Colors.black.withAlpha(100), blurRadius: 10.0),
@@ -124,7 +124,7 @@ setState((){
             ),
 
           ),),
-          SizedBox(height: 20,),
+          const SizedBox(height: 20,),
           Align(alignment: Alignment.center, child:Container(
             width: size.width,
             decoration: const BoxDecoration(borderRadius: const BorderRadius.only(topRight: Radius.circular(10.0), topLeft: Radius.circular(10.0)),),
@@ -132,7 +132,7 @@ setState((){
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Container(
+                SizedBox(
                     child: Image.asset("assets/images/video-360.png"), width: 50,),
 
               ],
@@ -142,7 +142,7 @@ setState((){
         ],)
 
 
-      )): Center(child: CircularProgressIndicator(),);}
+      )): const Center(child: CircularProgressIndicator(),);}
     )),);
     }
   }

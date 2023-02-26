@@ -5,6 +5,7 @@ import 'dart:isolate';
 import 'dart:ui';
 import 'package:acpmovil/constants.dart';
 import 'package:acpmovil/views/login.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
@@ -30,9 +31,31 @@ bool isChecked = false;
 late StreamSubscription internetSubscription;
 late StreamSubscription subscription;
 ConnectivityResult result = ConnectivityResult.none;
-
+List menus_ocultos = [];
+String? estado_menu1;
 ReceivePort receivePort = ReceivePort();
 int progress = 0;
+
+
+Future<void> getMenusO() async{
+  menus_ocultos.clear();
+  var menus = FirebaseFirestore.instance.collection("menus_ocultos").where("menu", isEqualTo: "boleta");
+  QuerySnapshot menu = await menus.get();
+  setState((){
+    if(menu.docs.isNotEmpty){
+      for(var doc in menu.docs){
+        print("DATOS: "+doc.id.toString());
+        menus_ocultos.add(doc.data());
+      }
+
+      print("GERENTE: "+menus_ocultos[0]["estado"]);
+      estado_menu1 = menus_ocultos[0]["estado"];
+      MostrarDatosBoleta();
+    }
+  });
+
+
+}
 @override
 void initState() {
   /*IsolateNameServer.registerPortWithName(receivePort.sendPort, "descargando");
@@ -54,7 +77,8 @@ void initState() {
     setState(() => this.hasInternet = hasInternet);
   });
   print("ESTADO INTERNET $hasInternets");
-  MostrarDatosBoleta();
+  getMenusO();
+
 }
 
 _launchURL() async {
@@ -69,7 +93,7 @@ _launchURL() async {
           ] ),
         );
       });
-  var url = 'https://web.acpagro.com/acp/index.php/boleta/pdf_boleta_final/'+dniUsuario.toString()+'/15/'+dniUsuario.toString()+'.pdf';
+  var url = 'https://web.acpagro.com/acp/index.php/boleta/pdf_boleta_final_new/'+dniUsuario.toString()+'/15/'+dniUsuario.toString()+'.pdf';
   if (await canLaunch(url)) {
     await launch(url);
   } else {
@@ -94,55 +118,68 @@ sendPort.send(progress);
   }*/
   Future<void>MostrarDatosBoleta() async{
     dataBoleta.clear();
-    try {
-      final result = await InternetAddress.lookup('google.com');
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        var response = await http.post(
-            Uri.parse("${url_base}acpmovil/controlador/datos-controlador.php"),
-            body: {"accion": "_5UKSTFA8W2SYFQV5", "_5UKQTIRF82SYFQ": dniUsuario, "_5UKXNFWJY2SYFQ": "256"});
-        // if (mounted) {
-        setState(() {
-          var extraerData = json.decode(response.body);
-          dataBoleta = extraerData["resultado"];
-          if(dataBoleta.isEmpty){
-             var objeto = {
-               "RESULTADO" : "SIN DATA"
-             };
+    print("dniUsuario "+estado_menu1.toString());
+    if(estado_menu1 == "1") {
+      try {
+        final result = await InternetAddress.lookup('google.com');
+        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+          print("dniUsuario "+dniUsuario.toString());
+          var response = await http.post(
+              Uri.parse(
+                  "${url_base}acpmovil/controlador/datos-controlador.php"),
+              body: {
+               // "accion": "_5UKSTFA8W2SYFQV5",
+                 "accion": "_5UKSTFA8W2SYFQV5_V2",
+                "_5UKQTIRF82SYFQ": dniUsuario,
+                "_5UKXNFWJY2SYFQ": "256"
+              });
+          // if (mounted) {
+          setState(() {
+            var extraerData = json.decode(response.body);
+            dataBoleta = extraerData["resultado"];
+            print("DATA: "+dataBoleta.toString());
+            if (dataBoleta.isEmpty) {
+              print("HOLAaaaaaa...");
+              var objeto = {
+                "RESULTADO": "SIN DATA"
+              };
 
-             dataBoleta.add(objeto);
-          }
-          print("REST: $dataBoleta");
-        });
+              dataBoleta.add(objeto);
+            }
+            print("REST: $dataBoleta");
+          });
 
 
-        // }
+          // }
 
-      }else{
+        } else {
+          showDialog(
+              context: context,
+              builder: (context) =>
+              const CustomDialogsAlert(
+                title: "MENSAJE",
+                description:
+                "Revisa tu conexión a internet",
+                imagen: "assets/images/advertencia.png",
+              ));
+        }
+      } on SocketException catch (_) {
+        Widget okButton = TextButton(
+          child: const Text("OK"),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        );
         showDialog(
             context: context,
-            builder: (context) => const CustomDialogsAlert(
-              title: "MENSAJE",
-              description:
-              "Revisa tu conexión a internet",
-              imagen: "assets/images/advertencia.png",
-            ));
+            builder: (BuildContext context) {
+              return Center(
+                  child: AlertDialog(
+                      content: const Text('Revisa tu conexión a internet'),
+                      actions: [okButton]));
+            });
+        print('not connected');
       }
-    } on SocketException catch (_) {
-      Widget okButton = TextButton(
-        child: const Text("OK"),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      );
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return Center(
-                child: AlertDialog(
-                    content: const Text('Revisa tu conexión a internet'),
-                    actions: [okButton]));
-          });
-      print('not connected');
     }
   }
 
@@ -151,7 +188,7 @@ sendPort.send(progress);
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
-        body: dataBoleta.isEmpty? Center(child:CircularProgressIndicator()): dataBoleta[0]["RESULTADO"] == "SIN DATA" ? Center(child: Container( color:Colors.white, child:Column( mainAxisAlignment: MainAxisAlignment.center, children: [
+        body: estado_menu1 == "1" ? dataBoleta.isEmpty? Center(child:CircularProgressIndicator()): dataBoleta[0]["RESULTADO"] == "SIN DATA" ? Center(child: Container( color:Colors.white, child:Column( mainAxisAlignment: MainAxisAlignment.center, children: [
             Image.asset("assets/images/buscar.gif", width: 100,),
           Container(margin: EdgeInsets.symmetric(horizontal: 35, vertical: 20), child: Text("AÚN NO CUENTA CON BOLETA DE PAGO EN ÉSTA SEMANA. / ESPERE E INTENTE NUEVAMENTE EN UNOS MINUTOS.")),
         ],)) ):Container(
@@ -203,7 +240,10 @@ sendPort.send(progress);
                   Text("S/."+dataBoleta[0]["NETOPAGAR"], style: TextStyle(fontFamily: "Schyler", fontSize: 18), textAlign: TextAlign.right,),
                 ],),
           ],)
-        ),
+        ):Center(child: Container( color:Colors.white, child:Column( mainAxisAlignment: MainAxisAlignment.center, children: [
+          Image.asset("assets/images/buscar.gif", width: 100,),
+          Container(margin: EdgeInsets.symmetric(horizontal: 35, vertical: 20), child: Text("AÚN NO CUENTA CON BOLETA DE PAGO EN ÉSTA SEMANA. / ESPERE E INTENTE NUEVAMENTE EN UNOS MINUTOS.")),
+        ],)) ),
     bottomNavigationBar: dataBoleta.isEmpty? Container(color:Colors.white, height: size.height/5,): dataBoleta[0]["RESULTADO"] == "SIN DATA" ? Container(color:Colors.white,height: size.height/5,) :Container(
       height: size.height/5,
         color: Colors.grey[300],

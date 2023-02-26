@@ -380,14 +380,14 @@ void MostrarControles(){
             children: [
               Container(
                 margin: EdgeInsets.symmetric( vertical: 20),
-                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                 width: size.width,
                 child: SingleChildScrollView(scrollDirection: Axis.vertical, child: Column( mainAxisAlignment: MainAxisAlignment.start, children: [
                 Visibility(maintainSize: tiporeclamo,
                   maintainAnimation: true,
                   maintainState: true,
                   visible: tiporeclamo,
-                  child: Container(width: size.width/1.6,child: Text("TIPO DE RECLAMO", style: TextStyle(fontFamily: "Schyler", fontSize: 12, color: Colors.grey)))),
+                  child: Container(width: size.width/1.6,child: Text("TIPO DE RECLAMO", style: TextStyle(fontFamily: "Schyler", fontSize: 11, color: Colors.grey)))),
                   SizedBox(height: tiporeclamo ? 5: 0,),
                   Visibility(maintainSize: tiporeclamo,
                     maintainAnimation: true,
@@ -395,7 +395,7 @@ void MostrarControles(){
                     visible: tiporeclamo,
                   child: Row(children: [
                     Container( padding: EdgeInsets.all(10),decoration: BoxDecoration(color: Colors.grey[350], borderRadius: const BorderRadius.all(Radius.circular(8.0))), child: Icon(Icons.receipt_long)),
-                    datatiporeclamo == null ? Container(width: size.width/1.43,child: CircularProgressIndicator()): Container( width: size.width/1.43, child: FormHelper.dropDownWidget(context, "SELECCIONAR TIPO RECLAMO", "", datatiporeclamo!, (onChangedVal){
+                    datatiporeclamo == null ? Container(width: size.width/1.43,child: CircularProgressIndicator()): Container( width: size.width/1.35, child: FormHelper.dropDownWidget(context, "SELECCIONAR TIPO RECLAMO", "", datatiporeclamo!, (onChangedVal){
                       setState((){
                         idsubreclamo = onChangedVal;
                         switch (int.parse(idsubreclamo.toString())){
@@ -582,7 +582,7 @@ void MostrarControles(){
                     visible: grupotrabajo,
                  child: Row(children: [
                    Container( padding: EdgeInsets.all(10),decoration: BoxDecoration(color: Colors.grey[350], borderRadius: const BorderRadius.all(Radius.circular(8.0))), child: Icon(Icons.grass_outlined)),
-                   Container( width: size.width/1.43, child: FormHelper.dropDownWidget(context, "SELECCIONAR GRUPO TRAB.", "", widget.grupotrabajo!, (onChangedVal){
+                   Container( width: size.width/1.35, child: FormHelper.dropDownWidget(context, "SELECCIONAR GRUPO TRAB.", "", widget.grupotrabajo!, (onChangedVal){
                      setState((){
                        idgruposeleccionado = onChangedVal;
                      });
@@ -764,7 +764,7 @@ void MostrarControles(){
                     visible: bonoreclamo,
                     child: Row(children: [
                     Container( padding: EdgeInsets.all(10),decoration: BoxDecoration(color: Colors.grey[350], borderRadius: const BorderRadius.all(Radius.circular(8.0))), child: Icon(Icons.money)),
-                   Container( width: size.width/1.43, child: FormHelper.dropDownWidget(context, "SELECCIONAR BONO", "", widget.bono!, (onChangedVal){
+                   Container( width: size.width/1.35, child: FormHelper.dropDownWidget(context, "SELECCIONAR BONO", "", widget.bono!, (onChangedVal){
                       setState((){
                         idbonoseleccionado = onChangedVal;
                       });
@@ -800,7 +800,7 @@ void MostrarControles(){
                     visible: anioreclamo,
                     child: Row(children: [
                     Container( padding: EdgeInsets.all(10),decoration: BoxDecoration(color: Colors.grey[350], borderRadius: const BorderRadius.all(Radius.circular(8.0))), child: Icon(Icons.date_range)),
-                    Container( width: size.width/1.43, child: FormHelper.dropDownWidget(context, "SELECCIONAR AÑO", "", widget.anioutilidades!, (onChangedVal){
+                    Container( width: size.width/1.35, child: FormHelper.dropDownWidget(context, "SELECCIONAR AÑO", "", widget.anioutilidades!, (onChangedVal){
                       setState((){
                         idanioseleccionada = onChangedVal;
                       });

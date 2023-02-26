@@ -27,6 +27,7 @@ class _CreateUserState extends State<CreateUser> {
   Color? coloralertaFecha = Colors.black45;
   Color? coloralertaPass = Colors.black45;
   List dataUser= [];
+  List usuariosnisira = [];
   bool _secureText = true;
   late FocusNode focusUser, focusPassword, focusFecha;
   bool _typeKeyboardText = true;
@@ -42,7 +43,7 @@ class _CreateUserState extends State<CreateUser> {
     });
   }
 
-  Future createUser(String clave, String nombre, String empresa) async{
+  Future createUser(String clave, String nombre, String empresa, String tipo) async{
     var usuariosF = FirebaseFirestore.instance.collection("users").where("dni",isEqualTo: myControllerUser2.text);
     QuerySnapshot users = await usuariosF.get();
 
@@ -55,7 +56,8 @@ class _CreateUserState extends State<CreateUser> {
           'nacimiento': myControllerFecha.text,
           'password': clave,
           'name': nombre,
-          'empresa': empresa
+          'empresa': empresa,
+          'tipouser': tipo
         };
         docUser.add(json);
         Navigator.pop(context);
@@ -76,6 +78,63 @@ class _CreateUserState extends State<CreateUser> {
             "Usted ya tiene una cuenta activa",
             imagen: "assets/images/usuario.png",
           ));
+    }
+  }
+
+  Future addUserNisira() async{
+
+      var response = await http.post(
+          Uri.parse("${url_base}acpmovil/controlador/usuario.php"),
+          body: {"accion": "usuariosnisira"});
+      setState((){
+        var extraerData = json.decode(response.body);
+        usuariosnisira = extraerData["resultado"];
+        if(usuariosnisira.isNotEmpty) {
+        for(int i = 0; i< usuariosnisira.length; i++){
+          setState((){
+            final docUser = FirebaseFirestore.instance.collection("users");
+            final json = {
+              'dni': usuariosnisira[i]["IDUSUARIO"],
+              'nacimiento': usuariosnisira[i]["FECHA_NACIMIENTO"],
+              'password': usuariosnisira[i]["CLAVE"],
+              'name': usuariosnisira[i]["NOMBRE"],
+              'empresa': usuariosnisira[i]["EMPRESA"],
+              'tipouser': usuariosnisira[i]["TIPOUSUARIO"]
+            };
+           // print("registroTIPO: "+usuariosnisira[i]["TIPOUSUARIO"].toString());
+             docUser.add(json);
+
+          });
+          print("registro: "+i.toString());
+        }
+        }
+      });
+
+
+
+
+
+  }
+
+  void getUsers() async{
+
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        });
+    var usuariosF = FirebaseFirestore.instance.collection("users");
+    QuerySnapshot users = await usuariosF.get();
+
+    if(users.docs.isNotEmpty){
+      for(var doc in users.docs){
+        print("DATOS: "+doc.id.toString());
+        usuarios.add(doc.data());
+      }
+      print("CANTIDAD USERS:" + usuarios.length.toString());
     }
   }
 
@@ -106,7 +165,7 @@ class _CreateUserState extends State<CreateUser> {
               if(dataUser[0]["FECHA_NACIMIENTO"] == myControllerFecha.text) {
                 nombreUsuario = dataUser[0]["USR_NOMBRES"];
                 await createUser(dataUser[0]["CLAVE"], dataUser[0]["USR_NOMBRES"],
-                    dataUser[0]["EMPRESA"]);
+                    dataUser[0]["EMPRESA"],dataUser[0]["IDPLANILLA"]);
                  datosUsuario(nombreUsuario, dniUsuario);
                 /*EasyLoading.showToast(
                     "Registrado Correctamente");*/
@@ -463,7 +522,9 @@ class _CreateUserState extends State<CreateUser> {
                                               BorderRadius.circular(30)),
                                       elevation: 10,
                                       primary: const Color(0XFF00AB74)),
-                                  onPressed: () {
+                                  onPressed: () async{
+                                   // await addUserNisira();
+                                     //getUsers();
                                     _validarDatos();
                                   },
                                   child: const Text('REGISTRAR'),

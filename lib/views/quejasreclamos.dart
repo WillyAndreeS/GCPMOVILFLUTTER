@@ -239,7 +239,7 @@ class _QuejasReclamosState extends State<QuejasReclamos> {
                           reclamostodos[index]["ESTADO"],
                           maxLines: 2,
                           textAlign: TextAlign.left,
-                          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold,fontFamily: "Schyler", fontSize: 18))),
+                          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold,fontFamily: "Schyler", fontSize: 16))),
 
                 ],
               ),
@@ -257,7 +257,7 @@ class _QuejasReclamosState extends State<QuejasReclamos> {
                     Container( child: Icon(Icons.document_scanner_rounded),),
                     SizedBox(width: 10,),
                     Container(
-                      child: Text(reclamostodos[index]["TIPORECLAMO"], style: TextStyle(fontSize: 15,fontFamily: "Schyler"),),),
+                      child: Text(reclamostodos[index]["TIPORECLAMO"], style: TextStyle(fontSize: 14,fontFamily: "Schyler"),),),
 
                   ],),
                   SizedBox(height: 20,),
@@ -265,7 +265,7 @@ class _QuejasReclamosState extends State<QuejasReclamos> {
                     Container( child: Icon(Icons.groups),),
                     SizedBox(width: 10,),
                     Container(
-                      child: Text("Grupo: "+ reclamostodos[index]["GRUPOTRABAJO"], style: TextStyle(fontSize: 15,fontFamily: "Schyler")),),
+                      child: Text("Grupo: "+ reclamostodos[index]["GRUPOTRABAJO"], style: TextStyle(fontSize: 14,fontFamily: "Schyler")),),
 
                   ],),
                   SizedBox(height: 20,),
@@ -277,12 +277,12 @@ class _QuejasReclamosState extends State<QuejasReclamos> {
 
                   ],),
 
-                  SizedBox(height: 20,),
+                  SizedBox(height: 10,),
                   Row(children: [
                     Container( child: Icon(Icons.text_snippet_rounded),),
                     SizedBox(width: 10,),
                     Container(
-                      child: Text( reclamostodos[index]["OBSERVACION"], style: TextStyle(fontSize: 15,fontFamily: "Schyler")),),
+                      child: Text( reclamostodos[index]["OBSERVACION"], style: TextStyle(fontSize: 14,fontFamily: "Schyler")),),
 
                   ],),
                   SizedBox(height: 10,),
@@ -292,7 +292,7 @@ class _QuejasReclamosState extends State<QuejasReclamos> {
                     children: [
                     Container(
                       child: Text( reclamostodos[index]["FECHAREGISTRO"], style:
-                        TextStyle(color: Colors.grey,fontSize: 15,fontFamily: "Schyler"),),),
+                        TextStyle(color: Colors.grey,fontSize: 12,fontFamily: "Schyler"),),),
 
                   ],),
 

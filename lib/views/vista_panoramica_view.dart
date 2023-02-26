@@ -1,17 +1,13 @@
 
-import 'dart:async';
 import 'dart:core';
-import 'dart:io';
-import 'package:acpmovil/constants.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 
 
 class VistapanoramicaWeb extends StatefulWidget {
   String? url, titulo;
-  VistapanoramicaWeb({Key? key, this.url, this.titulo}) ;
+   VistapanoramicaWeb({Key? key, this.url, this.titulo}) ;
 
   @override
   _VistapanoramicaWebState createState() => _VistapanoramicaWebState();
@@ -31,7 +27,7 @@ class _VistapanoramicaWebState extends State<VistapanoramicaWeb> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green[700],
-        title:  Text(widget.titulo!, style: TextStyle(fontFamily: "Schyler"),),
+        title:  Text(widget.titulo!, style: const TextStyle(fontFamily: "Schyler"),),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: (){
@@ -47,7 +43,6 @@ class _VistapanoramicaWebState extends State<VistapanoramicaWeb> {
               url: Uri.parse(widget.url!)
           ),
           onReceivedServerTrustAuthRequest: (controller, challenge) async {
-            print(challenge);
             return ServerTrustAuthResponse(action: ServerTrustAuthResponseAction.PROCEED);
           },
         );

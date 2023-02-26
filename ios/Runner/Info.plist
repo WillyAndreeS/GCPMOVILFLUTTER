@@ -2,10 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Acpmovil</string>
+	<string>GCP Móvil</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -13,21 +15,37 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>acpmovil</string>
+	<string>Acpmovil</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>$(FLUTTER_BUILD_NAME)</string>
+	<string>1.0.9</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<string>2</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>tel</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Necesitamos acceder a tu ubicación para ubicar lugares de referencia, generar rutas desde tu ubicación hacia sectores de nuestra empresa</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Necesitamos acceder a tu ubicación para ubicar lugares de referencia, generar rutas desde tu ubicación hacia sectores de nuestra empresa</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Necesitamos acceder a tu ubicación para ubicar lugares de referencia, generar rutas desde tu ubicación hacia sectores de nuestra empresa</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>GCP Móvil requiere acceso a tu librería de fotos, para que puedas incluir o editar imágenes de tu perfil de usuario.</string>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
+	<key>UIStatusBarHidden</key>
+	<false/>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
@@ -41,17 +59,7 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>LSApplicationQueriesSchemes</key>
-    <array>
-      <string>tel</string>
-    </array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>CADisableMinimumFrameDurationOnPhone</key>
-	<true/>
-    <key>NSLocationWhenInUseUsageDescription</key>
-    <string>Necesitamos acceder a tu ubicación para ofrecerte servicios de geolocalización</string>
-    <key>NSLocationAlwaysUsageDescription</key>
-    <string>Necesitamos acceder a tu ubicación para ofrecerte servicios de geolocalización</string>
 </dict>
 </plist>

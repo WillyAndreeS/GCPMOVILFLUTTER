@@ -158,7 +158,8 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
                 padding: EdgeInsets.all(8.0),
                 child: CircleAvatar(
                   radius: 40,
-                  child: ClipOval( child: hasInternets || hasInternet ?  Image.network(url_base+"acp/fotosColaboradores/"+dniUsuario!+".jpg",): Image.asset(
+                  //http://web.acpagro.com/app-gcp/index.php/Imagenfacial/examinarFotoAcpLocation/$dni
+                  child: ClipOval( child: hasInternets || hasInternet ?  Image.network(url_base+"app-gcp/index.php/Imagenfacial/examinarFotoAcpLocation/"+dniUsuario!,): Image.asset(
                       "assets/images/ic_colaborador_sf_holder_pg.png"
                   )),
 

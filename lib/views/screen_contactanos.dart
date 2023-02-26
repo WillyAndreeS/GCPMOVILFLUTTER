@@ -32,7 +32,7 @@ class _ConocenosContactanosState extends State<ConocenosContactanos> {
               ),
             ),
             imageUrl:
-                'https://web.acpagro.com/acp/project/imagenes_sis/imagenes_app/background_foto_arandanos.jpg',
+                'https://firebasestorage.googleapis.com/v0/b/gcp-movil.appspot.com/o/background_foto_arandanos.jpg?alt=media&token=de57d08f-d041-4e7e-896e-3ff88b33f5a4',
           ),
           Container(
             color: Colors.black38,

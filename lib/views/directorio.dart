@@ -21,7 +21,8 @@ import 'package:sliding_sheet/sliding_sheet.dart';
 
 class DirectorioPage extends StatefulWidget {
   List? trabajadores;
-  DirectorioPage({Key? key, this.trabajadores}) ;
+  String? areacol;
+  DirectorioPage({Key? key, this.trabajadores, this.areacol}) ;
 
   @override
   DirectorioPageState createState() => DirectorioPageState();
@@ -83,7 +84,7 @@ class DirectorioPageState extends State<DirectorioPage> {
       });
     });
    // RecibirDatos();
-    print("FOTO: "+widget.trabajadores![0]["FOTO"].toString().substring(21));
+    //print("FOTO: "+widget.trabajadores![0]["FOTO"].toString().substring(21));
     changeOpacity();
 
   }
@@ -110,7 +111,7 @@ class DirectorioPageState extends State<DirectorioPage> {
 
   @override
   Widget build(BuildContext context) {
-    final iskeyboard = MediaQuery.of(context).viewInsets.bottom != 0;
+    final iskeyboard = MediaQuery.of(context).viewInsets.bottom !=  0;
     final Size size = MediaQuery.of(context).size;
     final double categoryHeight = size.height*0.30;
     return Scaffold(
@@ -146,6 +147,12 @@ class DirectorioPageState extends State<DirectorioPage> {
                         Container(
                             alignment: Alignment.center,
                             child: const Text("COLABORADORES", style: TextStyle(color: Colors.black, fontSize: 22,fontFamily: "Schyler"))
+                        ),
+                        const SizedBox(height: 15,),
+                        Container(
+                            alignment: Alignment.centerLeft,
+                            margin: EdgeInsets.only(left: 40),
+                            child:  Text(widget.areacol!, style: TextStyle(color: Colors.grey[600], fontSize: 14,fontFamily: "Schyler"))
                         ),
                         const SizedBox(height: 20,),
                         Container(
@@ -191,7 +198,7 @@ class DirectorioPageState extends State<DirectorioPage> {
                         ),
                         const SizedBox(height: 20,),
                         Container(
-                          height: size.height * 0.7,
+                          height: size.height * 0.68,
                           margin: EdgeInsets.symmetric(horizontal: 10),
                           child:
                         ListView.builder(
@@ -209,6 +216,7 @@ class DirectorioPageState extends State<DirectorioPage> {
                                   cargo = widget.trabajadores![index]["CARGO"];
                                   area = widget.trabajadores![index]["AREA"];
                                   foto = widget.trabajadores![index]["FOTO"];
+                                  print("FOTOOOO URL: "+widget.trabajadores![index]["FOTO"].toString().substring(21,29));
                                   showSheet();
                                 });
 
@@ -225,11 +233,12 @@ class DirectorioPageState extends State<DirectorioPage> {
                             child: Row(
                               children: [
                                 CircleAvatar(
-                                  backgroundColor: const Color(0XFF00AB74),
+                                  backgroundColor: const Color(0XFfF00AB74),
                                   radius: 30,
                                   child: ClipOval(
                                     child: CachedNetworkImage(
-                                      imageUrl:'https://web.acpagro.com/acp/fotosColaboradores/'+widget.trabajadores![index]["FOTO"].toString().substring(21),placeholder: (context, url) => CircularProgressIndicator(),
+                                      //http://web.acpagro.com/app-gcp/index.php/Imagenfacial/examinarFotoAcpLocation/$dni
+                                      imageUrl:'http://web.acpagro.com/app-gcp/index.php/Imagenfacial/examinarFotoAcpLocation/'+widget.trabajadores![index]["FOTO"].toString().substring(21,29),placeholder: (context, url) => CircularProgressIndicator(),
                                       errorWidget: (context, url, error) => Icon(Icons.error),
                                       width: 50,
                                       height: 50,
@@ -297,8 +306,10 @@ class DirectorioPageState extends State<DirectorioPage> {
         GestureDetector(
           onTap: (){
             setState((){
+              print("FOTOOOOO +"+foto.substring(21));
               final urlImages = [
-                'https://web.acpagro.com/acp/fotosColaboradores/'+foto.substring(21)
+                //http://web.acpagro.com/app-gcp/index.php/Imagenfacial/examinarFotoAcpLocation/
+                'http://web.acpagro.com/app-gcp/index.php/Imagenfacial/examinarFotoAcpLocation/'+foto.substring(21,29)
               ];
 
               openGallery(urlImages);
@@ -306,7 +317,7 @@ class DirectorioPageState extends State<DirectorioPage> {
 
           },
           child: CachedNetworkImage(
-          imageUrl:'https://web.acpagro.com/acp/fotosColaboradores/'+foto.substring(21),
+          imageUrl:'http://web.acpagro.com/app-gcp/index.php/Imagenfacial/examinarFotoAcpLocation/'+foto.substring(21,29),
           imageBuilder: (context, imageProvider) => CircleAvatar(
             backgroundColor: const Color(0XFF00AB74),
             radius: 80,

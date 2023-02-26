@@ -1,6 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:acpmovil/constants.dart';
+import 'package:acpmovil/views/galeria.dart';
+import 'package:acpmovil/views/screen_noticias.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:acpmovil/models/documento.dart';
@@ -11,7 +17,8 @@ import 'package:http/http.dart' as http;
 class RevistasBoletines extends StatefulWidget {
   static List<Documento> listaRevistas = [];
   static List<Documento> listaBoletines = [];
-  const RevistasBoletines({Key? key}) : super(key: key);
+  int? menu = 0;
+   RevistasBoletines({Key? key, this.menu}) : super(key: key);
 
   @override
   _RevistasBoletinesState createState() => _RevistasBoletinesState();
@@ -20,12 +27,51 @@ class RevistasBoletines extends StatefulWidget {
 class _RevistasBoletinesState extends State<RevistasBoletines> {
   late Future<List<Documento>> _listaTotalDocumentos;
   int selectedPage = 0;
-  final _pageOptions = [const Revistas(), const Boletines()];
+  String? IDCEL;
+  final _pageOptions = [const Revistas(), const Boletines(), Galeria(), Noticias()];
+
+  Future<String?> _getId() async {
+    var deviceInfo = DeviceInfoPlugin();
+    if (Platform.isIOS) { // import 'dart:io'
+      var iosDeviceInfo = await deviceInfo.iosInfo;
+      IDCEL = iosDeviceInfo.identifierForVendor.toString();
+      print("IDCEL: "+IDCEL.toString());
+      return iosDeviceInfo.identifierForVendor; // unique ID on iOS
+    } else if(Platform.isAndroid) {
+      var androidDeviceInfo = await deviceInfo.androidInfo;
+      IDCEL = androidDeviceInfo.androidId.toString();
+      print("IDCEL: "+IDCEL.toString());
+      return androidDeviceInfo.androidId; // unique ID on Android
+
+    }
+  }
+
+  Future SaveVisita() async{
+    await _getId();
+    if(mounted) {
+      setState(() {
+
+        final DateTime now = DateTime.now();
+        final docUser = FirebaseFirestore.instance.collection("visitas");
+
+        final json = {
+          'fecha': now.toString(),
+          'idinterfaz': "GCP Mundo",
+          'idusuario': tipoUsuario.toString().toUpperCase() == "INVITADO" ? IDCEL.toString() : dniUsuario,
+          'imagen': "https://firebasestorage.googleapis.com/v0/b/gcp-movil.appspot.com/o/mundo-verde.png?alt=media&token=1781bbfd-de73-4cc9-aea7-895defc2f423",
+          'icono': "https://firebasestorage.googleapis.com/v0/b/gcp-movil.appspot.com/o/el-planeta-tierra.png?alt=media&token=49e5020f-60ca-4c5d-9926-12eb459e587d",
+          'color' : "0xFF455AB4"
+        };
+        docUser.add(json);
+      });
+    }
+  }
 
   @override
   void initState() {
     super.initState();
     _listaTotalDocumentos = _getListaTotalDocumentos();
+    SaveVisita();
   }
 
   _showDialog() async {
@@ -48,6 +94,17 @@ class _RevistasBoletinesState extends State<RevistasBoletines> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: widget.menu == 1 ? AppBar(
+        backgroundColor: Colors.green[700],
+        title: const Text("GCP Mundo", style: TextStyle(fontFamily: "Schyler"),),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: (){
+            Navigator.pop (context, false);
+          },
+        ),
+
+      ): null,
         body: FutureBuilder(
           future: _listaTotalDocumentos,
           builder: (context, snapshot) {
@@ -83,7 +140,9 @@ class _RevistasBoletinesState extends State<RevistasBoletines> {
           style: TabStyle.react,
           items: const [
             TabItem(icon: Icons.library_books, title: 'Revistas'),
-            TabItem(icon: Icons.book, title: 'Boletines')
+            TabItem(icon: Icons.book, title: 'Boletines'),
+            TabItem(icon: Icons.photo_library, title: 'Galería'),
+            TabItem(icon: Icons.text_snippet, title: 'Noticias')
           ],
           initialActiveIndex: 0,
           onTap: (int i) {

@@ -10,9 +10,12 @@ import 'package:acpmovil/views/drawer.dart';
 import 'package:acpmovil/views/gcpgps.dart';
 import 'package:acpmovil/views/page2.dart';
 import 'package:acpmovil/views/principalpage.dart';
+import 'package:acpmovil/views/programas_capacitaciones.dart';
 import 'package:acpmovil/views/quejasreclamos.dart';
 import 'package:acpmovil/views/screen_contactanos.dart';
 import 'package:acpmovil/views/screen_gcpmundo.dart';
+import 'package:acpmovil/views/screen_linea_covid.dart';
+import 'package:acpmovil/views/screen_linea_etica.dart';
 import 'package:acpmovil/views/screen_nuestros_productos_v2.dart';
 import 'package:acpmovil/views/utilidades.dart';
 import 'package:acpmovil/views/vista_panoramica_view.dart';
@@ -44,7 +47,7 @@ class _BeneficiosState extends State<Beneficios> {
 
   Future<void> getBeneficiosacp() async{
 
-    var beneficio = FirebaseFirestore.instance.collection("menu_beneficios").orderBy("id");
+    var beneficio = FirebaseFirestore.instance.collection("menu_beneficios").where("estado", isEqualTo: "1").orderBy("id");
     QuerySnapshot beneficios = await beneficio.get();
 setState((){
   if(beneficios.docs.isNotEmpty){
@@ -96,7 +99,9 @@ setState((){
     padding: const EdgeInsets.symmetric(horizontal:8,vertical: 8),
     itemCount: beneficiosF.length,
     itemBuilder: (BuildContext context, int index) {
-      return beneficiosF.isNotEmpty ? GestureDetector(
+      return beneficiosF.isNotEmpty ? Visibility(
+          visible: (tipoUsuario == 'invitado' && (beneficiosF[index]["titulo"] == 'Utilidades' || beneficiosF[index]["titulo"] == 'Quejas y sugerencias')) ? false: true,
+          child: GestureDetector(
           onTap: (){
             if(beneficiosF[index]["id"] == 1){
               setState((){
@@ -112,6 +117,13 @@ setState((){
                     MaterialPageRoute(builder: (context) =>  Utilidades()));
 
               });
+            }else if(beneficiosF[index]["id"] == 2){
+              setState((){
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) =>  LineaCovid()));
+
+              });
             }else if(beneficiosF[index]["id"] == 4){
               setState((){
                 Navigator.push(
@@ -119,7 +131,24 @@ setState((){
                     MaterialPageRoute(builder: (context) =>  QuejasReclamos()));
 
               });
+            }else if(beneficiosF[index]["id"] == 6){
+              setState((){
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) =>  ProgramasCapa()));
+
+              });
+
+            }else if(beneficiosF[index]["id"] == 5){
+              setState((){
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) =>  LineaEtica()));
+
+              });
+
             }
+
 
 
           },
@@ -182,7 +211,7 @@ setState((){
 
 
           ),
-            errorWidget: (context, url, error) => Icon(Icons.error),)): Center(child: CircularProgressIndicator(),);}
+            errorWidget: (context, url, error) => Icon(Icons.error),))): Center(child: CircularProgressIndicator(),);}
     ))),);
     }
   }

@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 
 const kTextColor = Color(0xFF3C4046);
@@ -30,16 +31,22 @@ const iconMenu = Color(0XFF89AA4E);
 const moradoacp = Color(0XFF7B4480);
 const azulacp = Color(0XFF3B5977);
 const amarilloacp = Color(0xFFE0C354);
+bool isPlaying = false;
 
 String? nombreUsuario = "";
 String? dniUsuario;
 String? empresaUsuario = "";
 String? tipoUsuario = "";
+String? fnacimiento = "";
 bool hasInternets = false;
 List menusgcp = [];
-
+final audioPlayer = AudioPlayer();
 String? titulomenu = "";
 String? imagenmenu = "";
+
+final ttok1 = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9";
+final ttok2 = "eyJpc3MiOiJodHRwczpcL1wvd2ViLmFjcGFncm8uY29tXC9tYXF1aW5hcmlhIiwic3ViIjoiMjA0NjE2NDI3MDYiLCJhdWQiOiJhcGlfdGtfZ2NwIiwiaWF0IjoxNjczOTI5MzE2LCJqdGkiOiIwMDgifQ";
+final ttok3 = "sost2KnRWTh4ZHXhn3dP1MyGz53MoYyoTY9xEdQdhME";
 
 const FOOD_DATA = [
   {
