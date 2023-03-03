@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:linkable/linkable.dart';
 
 class ConocenosContactanos extends StatefulWidget {
@@ -11,6 +12,8 @@ class ConocenosContactanos extends StatefulWidget {
 }
 
 class _ConocenosContactanosState extends State<ConocenosContactanos> {
+
+  void _launchURL(String url) async => await canLaunch(url) ? await launch(url) : throw 'Coult not launch $url';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,6 +57,7 @@ class _ConocenosContactanosState extends State<ConocenosContactanos> {
                         'OFICINAS',
                         style: TextStyle(
                             color: Colors.white,
+                            fontFamily: "Schyler",
                             fontSize: 26,
                             fontWeight: FontWeight.bold),
                       ),
@@ -74,7 +78,7 @@ class _ConocenosContactanosState extends State<ConocenosContactanos> {
                       curve: Curves.decelerate,
                       child: const Text(
                         'Calle Dean Valdivia NRO. 111 INT. 1002, URB. JARDÍN SAN ISIDRO - LIMA - PERÚ',
-                        style: TextStyle(color: Colors.white, fontSize: 15),
+                        style: TextStyle(color: Colors.white, fontSize: 15,fontFamily: "Schyler"),
                         textAlign: TextAlign.center,
                       ),
                       duration: const Duration(milliseconds: 500),
@@ -126,7 +130,7 @@ class _ConocenosContactanosState extends State<ConocenosContactanos> {
                                 TextStyle(color: Colors.white, fontSize: 15)),
                         Linkable(
                           style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 15),
+                              fontWeight: FontWeight.bold, fontSize: 15,fontFamily: "Schyler"),
                           linkColor: Colors.greenAccent,
                           text: "+51016193900",
                         )
@@ -144,10 +148,10 @@ class _ConocenosContactanosState extends State<ConocenosContactanos> {
                       children: [
                         const Text('Informes y Ventas: ',
                             style:
-                                TextStyle(color: Colors.white, fontSize: 15)),
+                                TextStyle(color: Colors.white, fontSize: 15,fontFamily: "Schyler")),
                         Linkable(
                           style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 15),
+                              fontWeight: FontWeight.bold, fontSize: 15,fontFamily: "Schyler"),
                           linkColor: Colors.greenAccent,
                           text: "info@acpagro.com",
                         )
@@ -162,6 +166,7 @@ class _ConocenosContactanosState extends State<ConocenosContactanos> {
                     const Text(
                       'FUNDO',
                       style: TextStyle(
+                          fontFamily: "Schyler",
                           color: Colors.white,
                           fontSize: 26,
                           fontWeight: FontWeight.bold),
@@ -171,7 +176,7 @@ class _ConocenosContactanosState extends State<ConocenosContactanos> {
                 _animacion(
                     const Text(
                       'Carretera Panamericana Norte Km. 733 - Pacanga Chepén La Libertad, Perú.',
-                      style: TextStyle(color: Colors.white, fontSize: 15),
+                      style: TextStyle(fontFamily: "Schyler",color: Colors.white, fontSize: 15),
                       textAlign: TextAlign.center,
                     ),
                     const Duration(milliseconds: 300),
@@ -204,6 +209,7 @@ class _ConocenosContactanosState extends State<ConocenosContactanos> {
                     const Text(
                       'Síguenos en',
                       style: TextStyle(
+                          fontFamily: "Schyler",
                           color: Colors.white,
                           fontSize: 24,
                           fontWeight: FontWeight.bold),
@@ -232,7 +238,9 @@ class _ConocenosContactanosState extends State<ConocenosContactanos> {
                               color: Colors.white,
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            _launchURL("https://www.facebook.com/AgricolaCerroPrietoSA/?locale=es_LA");
+                          },
                         ),
                         const Duration(milliseconds: 500),
                         Curves.decelerate),
@@ -252,7 +260,9 @@ class _ConocenosContactanosState extends State<ConocenosContactanos> {
                                 color: Colors.white,
                                 semanticsLabel: 'Instagram'),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            _launchURL("https://www.instagram.com/acpagro/?hl=es");
+                          },
                         ),
                         const Duration(milliseconds: 600),
                         Curves.decelerate),
@@ -270,7 +280,9 @@ class _ConocenosContactanosState extends State<ConocenosContactanos> {
                             child: SvgPicture.asset('assets/images/youtube.svg',
                                 color: Colors.white, semanticsLabel: 'Youtube'),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            _launchURL("https://www.youtube.com/@agricolacerroprieto8162");
+                          },
                         ),
                         const Duration(milliseconds: 700),
                         Curves.decelerate),
@@ -290,7 +302,9 @@ class _ConocenosContactanosState extends State<ConocenosContactanos> {
                                 color: Colors.white,
                                 semanticsLabel: 'Linkedin'),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            _launchURL("https://pe.linkedin.com/company/acpagrooficial");
+                          },
                         ),
                         const Duration(milliseconds: 800),
                         Curves.decelerate),

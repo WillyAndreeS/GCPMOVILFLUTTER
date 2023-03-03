@@ -106,7 +106,7 @@ setState((){
           onTap: ()async{
             Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) =>  AcpClubPromo(urlflyer: categoriasF[index]["foto"], nombre: categoriasF[index]["nombre"], terminos: categoriasF[index]["terminos"], idlocal: categoriasF[index]["idlocal"], cel: categoriasF[index]["cel"], facebook: categoriasF[index]["facebook"], instagram:  categoriasF[index]["instagram"],)));
+                MaterialPageRoute(builder: (context) =>  AcpClubPromo(urlflyer: categoriasF[index]["foto"], nombre: categoriasF[index]["nombre"], terminos: categoriasF[index]["terminos"], idlocal: categoriasF[index]["idlocal"], cel: categoriasF[index]["cel"], facebook: categoriasF[index]["facebook"], instagram:  categoriasF[index]["instagram"], direccion:  categoriasF[index]["direccion"])));
 
           },
           child: CachedNetworkImage(imageUrl: categoriasF[index]["foto"], imageBuilder: (context, imageProvider) => Container(

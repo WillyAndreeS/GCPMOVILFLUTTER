@@ -433,7 +433,7 @@ class _AcpClubState extends State<AcpClub> {
                                     print("ENLACE: "+locales[itemIndex]["foto"]);
                                     Navigator.push(
                                         context,
-                                        MaterialPageRoute(builder: (context) =>  AcpClubPromo(urlflyer: locales[itemIndex]["foto"], nombre: locales[itemIndex]["nombre"], terminos: locales[itemIndex]["terminos"], idlocal: locales[itemIndex]["idlocal"], cel: locales[itemIndex]["cel"], facebook: locales[itemIndex]["facebook"], instagram:  locales[itemIndex]["instagram"],)));
+                                        MaterialPageRoute(builder: (context) =>  AcpClubPromo(urlflyer: locales[itemIndex]["foto"], nombre: locales[itemIndex]["nombre"], terminos: locales[itemIndex]["terminos"], idlocal: locales[itemIndex]["idlocal"], cel: locales[itemIndex]["cel"], facebook: locales[itemIndex]["facebook"], instagram:  locales[itemIndex]["instagram"],direccion: locales[itemIndex]["direccion"],)));
                                   },
                                 child: CachedNetworkImage(imageUrl: locales[itemIndex]["foto"], imageBuilder: (context, imageProvider) =>  Container(
 

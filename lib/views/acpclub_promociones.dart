@@ -14,8 +14,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 class AcpClubPromo extends StatefulWidget {
-  String? urlflyer, nombre, terminos, idlocal, cel, facebook, instagram;
-  AcpClubPromo({Key? key, this.urlflyer, this.nombre, this.terminos, this.idlocal, this.cel,this.facebook, this.instagram});
+  String? urlflyer, nombre, terminos, idlocal, cel, facebook, instagram,direccion;
+  AcpClubPromo({Key? key, this.urlflyer, this.nombre, this.terminos, this.idlocal, this.cel,this.facebook, this.instagram, this.direccion});
 
   @override
   AcpClubPromoState createState() => AcpClubPromoState();
@@ -58,6 +58,7 @@ class AcpClubPromoState extends State<AcpClubPromo> {
   bool closeTopContainer = false;
   double topContainer = 0;
   double opacity = 1.0;
+  static const double _appBarBottomBtnPosition = 24.0;
 
   List<Widget> itemsData = [];
 
@@ -156,8 +157,10 @@ class AcpClubPromoState extends State<AcpClubPromo> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
+    const Key centerKey = ValueKey<String>('bottom-sliver-list');
     final double categoryHeight = size.height * 0.30;
     return Scaffold(
+      backgroundColor: Colors.green,
         bottomNavigationBar: BottomNavigationBar(
           //color: const Color(0XFF388E3C),
           backgroundColor: Color(0XFF388E3C),
@@ -258,7 +261,8 @@ class AcpClubPromoState extends State<AcpClubPromo> {
             });
           },
         ),
-        body: CustomScrollView(slivers: [
+        body: CustomScrollView(
+            slivers: [
 
           SliverAppBar(
             pinned: true,
@@ -279,13 +283,6 @@ class AcpClubPromoState extends State<AcpClubPromo> {
                   decoration:
                   BoxDecoration(
                     color: Colors.white,
-                    borderRadius:
-                    BorderRadius.only(bottomRight:Radius.circular(32), bottomLeft:Radius.circular(32)),
-                    //color: Color(0xFFFFFFFF),
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.black38,
-                          blurRadius: 10.0),],
                     image:
                     DecorationImage(
                       image:
@@ -296,13 +293,6 @@ class AcpClubPromoState extends State<AcpClubPromo> {
                   ),
               ), placeholder: (context, url) => Container(
                 decoration: const BoxDecoration(
-                    borderRadius:
-                    BorderRadius.only(bottomRight:Radius.circular(32), bottomLeft:Radius.circular(32)),
-                    //color: Color(0xFFFFFFFF),
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.black38,
-                          blurRadius: 10.0),],
                           image:
                           DecorationImage(
                             image:
@@ -313,14 +303,50 @@ class AcpClubPromoState extends State<AcpClubPromo> {
                 ),
               ),),
             ),
+            leading: PreferredSize(
+              preferredSize: const Size.fromHeight(0.0),
+              child: Transform.translate(
+                offset: const Offset(0, 0),
+                child: IconButton(icon: Icon(Icons.arrow_back_ios, color: Colors.black,),
+                  onPressed: (){
+                    Navigator.pop (context, false);
+                  },
+                ),
+              ),
+            ),
             expandedHeight: size.height * 0.40,
           ),
           SliverList(
+            key: centerKey,
+            delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) {
+                return Container(padding: EdgeInsets.symmetric(horizontal: 20),
+                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.only(topLeft: Radius.circular(35), topRight: Radius.circular(35)),  boxShadow: [
+                      BoxShadow(color: Colors.black, blurRadius: 10, offset: const Offset(0,-10)),
+
+                    ]),
+                    height: size.height*0.1, width: size.width,child: Container(width: size.width * 0.8,child: Row(children: [
+                  Icon(Icons.pin_drop, color: kPrimaryColor,),
+                  Text("Dirección: ", style: TextStyle(color:kPrimaryColor, fontWeight: FontWeight.bold),),
+                  SizedBox(width: 10,),
+                  Container( width: size.width*0.65,child: Text(widget.direccion!, style: TextStyle(color:Colors.black, fontWeight: FontWeight.bold),))
+                ],)));
+              },
+              childCount: 1,
+            ),
+          ),
+        /*Container(height: size.height*0.1, width: size.width,child: Row(children: [
+                Icon(Icons.pin_drop, color: kPrimaryColor,),
+                Text("Dirección: ")
+              ],)),*/
+          SliverList(
+
               delegate: SliverChildBuilderDelegate(
 
                 childCount: promociones.length,
                       (BuildContext context, int index){
             return Container(
+              color: Colors.white,
                 child: Column(
               children: [
                  GestureDetector(
@@ -597,7 +623,7 @@ class CustomDialogsAlert extends StatelessWidget {
               Text(
                 description!,
                 style: const TextStyle(fontSize: 16.0),
-                textAlign: TextAlign.center,
+                textAlign: TextAlign.justify,
               ),
               const SizedBox(height: 24.0),
               Row(

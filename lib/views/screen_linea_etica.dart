@@ -16,7 +16,7 @@ class _LineaEticaState extends State<LineaEtica> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0XFF00AB74),
-        title: const Text('Línea Ética'),
+        title: const Text('Línea Ética', style: TextStyle(fontFamily: "Schyler"),),
       ),
       body: Stack(
         children: [
@@ -82,9 +82,9 @@ class _LineaEticaState extends State<LineaEtica> {
                       children: [
                         const Text('Correo Electrónico: ',
                             style:
-                                TextStyle(color: Colors.white, fontSize: 15)),
+                                TextStyle(color: Colors.white, fontSize: 15,fontFamily: "Schyler")),
                         Linkable(
-                          style: const TextStyle(
+                          style: const TextStyle(fontFamily: "Schyler",
                               fontWeight: FontWeight.bold, fontSize: 15),
                           linkColor: Colors.greenAccent,
                           text: "linea.etica@acpagro.com",
@@ -103,10 +103,10 @@ class _LineaEticaState extends State<LineaEtica> {
                       children: [
                         const Text('Celular o Whatsapp: ',
                             style:
-                                TextStyle(color: Colors.white, fontSize: 15)),
+                                TextStyle(color: Colors.white, fontSize: 15,fontFamily: "Schyler")),
                         Linkable(
                           style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 15),
+                              fontWeight: FontWeight.bold, fontSize: 15,fontFamily: "Schyler"),
                           linkColor: Colors.greenAccent,
                           text: "982848640",
                         )
@@ -146,6 +146,7 @@ class _LineaEticaState extends State<LineaEtica> {
                     const Text(
                       'Entrevista Personal',
                       style: TextStyle(
+                          fontFamily: "Schyler",
                           color: Colors.white,
                           fontSize: 18,
                           fontWeight: FontWeight.bold),
@@ -155,7 +156,7 @@ class _LineaEticaState extends State<LineaEtica> {
                 _animacion(
                     const Text(
                       'Fundo: Oficial de cumplimiento normativo',
-                      style: TextStyle(color: Colors.white, fontSize: 15),
+                      style: TextStyle(fontFamily: "Schyler",color: Colors.white, fontSize: 15),
                       textAlign: TextAlign.center,
                     ),
                     const Duration(milliseconds: 300),
@@ -163,7 +164,7 @@ class _LineaEticaState extends State<LineaEtica> {
                 _animacion(
                     const Text(
                       'Lima: Dean Valdivia 111, Oficina 901, San Isidro',
-                      style: TextStyle(color: Colors.white, fontSize: 15),
+                      style: TextStyle(fontFamily: "Schyler",color: Colors.white, fontSize: 15),
                       textAlign: TextAlign.center,
                     ),
                     const Duration(milliseconds: 300),

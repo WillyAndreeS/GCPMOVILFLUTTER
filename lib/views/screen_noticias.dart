@@ -20,7 +20,8 @@ import 'package:vertical_card_pager/vertical_card_pager.dart';
 
 class Noticias extends StatefulWidget {
 
-  Noticias({Key? key}) ;
+  String? titulo, tipo;
+  Noticias({Key? key, this.titulo, this.tipo}) ;
 
   @override
   _NoticiasState createState() => _NoticiasState();
@@ -45,7 +46,7 @@ class _NoticiasState extends State<Noticias> {
     if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
       var response = await http.post(
           Uri.parse("${url_base}acpmovil/controlador/datos-controlador.php"),
-          body: {"accion": "getComunidados", "TIPO": "N"});
+          body: {"accion": "getComunidados", "TIPO": widget.tipo!});
       // if (mounted) {
       setState(() {
         var extraerData = json.decode(response.body);
@@ -86,12 +87,22 @@ class _NoticiasState extends State<Noticias> {
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.green[700],
+        title: Text(widget.titulo!, style: TextStyle(fontFamily: "Schyler"),),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: (){
+            Navigator.pop (context, false);
+          },
+        ),
 
+      ),
       body:  Container(
         height: size.height,
         padding: const EdgeInsets.only(top: 20),
     child: Column(children: [
-      sublita.isEmpty ? Container(width:size.width, height: size.height * 0.9, child: Center(child: CircularProgressIndicator())): Container( width:size.width, height: size.height*0.76,child:
+      sublita.isEmpty ? Container(width:size.width, height: size.height*0.85, child: Center(child: CircularProgressIndicator())): Container( width:size.width, height: size.height*0.85,child:
       ListView.builder(
           //padding: const EdgeInsets.symmetric(vertical: 8),
           itemCount: sublita.length,

@@ -163,6 +163,7 @@ final List<Widget> imageSlidersFotos = imgListFotos
         ))
     .toList();
 
+  String? estado_menu2 = "0";
 class ScreenHome extends DrawerContent {
   @override
   _ScreenHomeState createState() => _ScreenHomeState();
@@ -180,6 +181,7 @@ class _ScreenHomeState extends State<ScreenHome> {
   late StreamSubscription internetSubscription;
   late StreamSubscription subscription;
   List menus_ocultos = [];
+  List menus_ocultos2 = [];
   String? estado_menu1;
   ConnectivityResult result = ConnectivityResult.none;
 
@@ -189,6 +191,8 @@ class _ScreenHomeState extends State<ScreenHome> {
         .collection("menus_ocultos")
         .where("menu", isEqualTo: "drawer");
     QuerySnapshot menu = await menus.get();
+
+
     setState(() {
       if (menu.docs.isNotEmpty) {
         for (var doc in menu.docs) {
@@ -201,6 +205,29 @@ class _ScreenHomeState extends State<ScreenHome> {
       }
     });
   }
+
+  Future<void> getMenus1() async {
+    menus_ocultos2.clear();
+    var menus1 = FirebaseFirestore.instance
+        .collection("menus_ocultos")
+        .where("menu", isEqualTo: "comunicados");
+    QuerySnapshot menu1 = await menus1.get();
+
+
+    setState(() {
+      if (menu1.docs.isNotEmpty) {
+        for (var doc in menu1.docs) {
+          print("DATOS: " + doc.id.toString());
+          menus_ocultos2.add(doc.data());
+        }
+
+        print("GERENTE: " + menus_ocultos2[0]["estado"]);
+        estado_menu2 = menus_ocultos2[0]["estado"];
+      }
+    });
+  }
+
+
 
   Future<void> getMenus() async {
     showDialog(
@@ -613,6 +640,7 @@ class _ScreenHomeState extends State<ScreenHome> {
       setState(() => hasInternets = hasInternet);
     });
     getMenusO();
+    getMenus1();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
@@ -665,23 +693,42 @@ class _CustomDialogsAlertState extends State<CustomDialogsAlert> {
     imgListFotos.clear();
     final result = await InternetAddress.lookup('google.com');
     if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-      var comunicado = FirebaseFirestore.instance
-          .collection("comunicados")
-          .where("EMPRESA", isEqualTo: "GENERAL").where("ESTADO", isEqualTo: "1")
-          .orderBy("FECHAREGISTRO", descending: false);
-      QuerySnapshot com = await comunicado.get();
-      setState(() {
-        if (com.docs.isNotEmpty) {
-          for (var doc in com.docs) {
-            print("DATOS: " + doc.id.toString());
-            comunicados.add(doc.data());
-          }
-          for (int i = 0; i < comunicados.length; i++) {
-            print("IMG: " + comunicados.length.toString());
-            imgListFotos.add(comunicados[i]["URL_IMG_PREVIA"]);
-          }
+     /* if(estado_menu2 == "1"){
+        var response = await http.post(
+            Uri.parse("${url_base}acpmovil/controlador/datos-controlador.php"),
+            body: {"accion": "getComunidados_inicio_empresa", "empresa": empresaUsuario});
+        if (mounted) {
+          setState(() {
+            var extraerData = json.decode(response.body);
+            comunicados = extraerData["resultado"];
+            print("REST: " + comunicados.toString());
+            for(int i = 0; i< comunicados.length; i++){
+              print("IMG: "+comunicados.length.toString());
+              imgListFotos.add(comunicados[i]["URL_IMG_PREVIA"]);
+            }
+          });
         }
-      });
+
+      }else{*/
+        var comunicado = FirebaseFirestore.instance
+            .collection("comunicados")
+            .where("EMPRESA", isEqualTo: "GENERAL").where("ESTADO", isEqualTo: "1")
+            .orderBy("FECHAREGISTRO", descending: false);
+        QuerySnapshot com = await comunicado.get();
+        setState(() {
+          if (com.docs.isNotEmpty) {
+            for (var doc in com.docs) {
+              print("DATOS: " + doc.id.toString());
+              comunicados.add(doc.data());
+            }
+            for (int i = 0; i < comunicados.length; i++) {
+              print("IMG: " + comunicados.length.toString());
+              imgListFotos.add(comunicados[i]["URL_IMG_PREVIA"]);
+            }
+          }
+        });
+    //  }
+
     }
   }
 

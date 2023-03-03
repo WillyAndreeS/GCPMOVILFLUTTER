@@ -75,6 +75,8 @@ final List<Widget> imageSlidersFotos = imgListFotos2
 ))
     .toList();
 
+String? estado_menu2 = "0";
+
 class Somosacp extends StatefulWidget {
   int? menu = 0;
   Somosacp({Key? key, this.menu}) ;
@@ -131,6 +133,27 @@ class _SomosacpState extends State<Somosacp> {
     }
   }
 
+  Future<void> getMenus1() async {
+    menus_ocultos.clear();
+    var menus1 = FirebaseFirestore.instance
+        .collection("menus_ocultos")
+        .where("menu", isEqualTo: "comunicados");
+    QuerySnapshot menu1 = await menus1.get();
+
+
+    setState(() {
+      if (menu1.docs.isNotEmpty) {
+        for (var doc in menu1.docs) {
+          print("DATOS: " + doc.id.toString());
+          menus_ocultos.add(doc.data());
+        }
+
+        print("GERENTE: " + menus_ocultos[0]["estado"]);
+        estado_menu2 = menus_ocultos[0]["estado"];
+      }
+    });
+  }
+
   Future SaveVisita() async{
     await _getId();
       if(mounted) {
@@ -168,6 +191,7 @@ class _SomosacpState extends State<Somosacp> {
     });
     print("ESTADO INTERNET "+hasInternets.toString());
     _obtenerUsuario();
+    getMenus1();
     SaveVisita();
     RecibirDatosEncuesta();
 
@@ -476,11 +500,30 @@ class _CustomDialogsAlertIniState extends State<CustomDialogsAlertIni> {
   }
 
 
+
+
   Future<String?> RecibirDatos() async {
     comunicados.clear();
     imgListFotos2.clear();
     final result = await InternetAddress.lookup('google.com');
     if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+     /* if(estado_menu2 == "1"){
+        var response = await http.post(
+            Uri.parse("${url_base}acpmovil/controlador/datos-controlador.php"),
+            body: {"accion": "getComunidados_inicio_empresa", "empresa": empresaUsuario});
+        if (mounted) {
+          setState(() {
+            var extraerData = json.decode(response.body);
+            comunicados = extraerData["resultado"];
+            print("REST: " + comunicados.toString());
+            for(int i = 0; i< comunicados.length; i++){
+              print("IMG: "+comunicados.length.toString());
+              imgListFotos2.add(comunicados[i]["URL_IMG_PREVIA"]);
+            }
+          });
+        }
+
+      }else{*/
       var comunicado = FirebaseFirestore.instance.collection("comunicados").where("EMPRESA",isEqualTo: empresaUsuario).where("ESTADO", isEqualTo: "1").orderBy("FECHAREGISTRO", descending: false);
       QuerySnapshot com = await comunicado.get();
       setState((){
@@ -496,6 +539,7 @@ class _CustomDialogsAlertIniState extends State<CustomDialogsAlertIni> {
         }
       });
 
+    //  }
     }
    /* comunicados.clear();
     imgListFotos2.clear();

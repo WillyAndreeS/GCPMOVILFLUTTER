@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:acpmovil/constants.dart';
 import 'package:acpmovil/views/galeria.dart';
 import 'package:acpmovil/views/screen_noticias.dart';
+import 'package:acpmovil/views/screen_noticias_informativos.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -28,7 +29,7 @@ class _RevistasBoletinesState extends State<RevistasBoletines> {
   late Future<List<Documento>> _listaTotalDocumentos;
   int selectedPage = 0;
   String? IDCEL;
-  final _pageOptions = [const Revistas(), const Boletines(), Galeria(), Noticias()];
+  final _pageOptions = [const Revistas(), const Boletines(), Galeria(), Noticias_informativos()];
 
   Future<String?> _getId() async {
     var deviceInfo = DeviceInfoPlugin();

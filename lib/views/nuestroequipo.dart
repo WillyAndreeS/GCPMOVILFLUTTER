@@ -107,7 +107,7 @@ class NuestroEquipoPageState extends State<NuestroEquipoPage> {
 
   }
 
-  Future<void> getAreas() async{
+  Future<void>  getAreas() async{
     areas.clear();
     var areaF = FirebaseFirestore.instance.collection("areas").orderBy("id");
     QuerySnapshot area = await areaF.get();
